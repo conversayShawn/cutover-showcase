@@ -1,0 +1,19 @@
+{
+  "name": "cutover-showcase",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Demo repo that shows Checkly running on PRs and gating merges in GitHub.",
+  "scripts": {
+    "test:playwright": "npx playwright test",
+    "test:checkly": "npx checkly test --record --verbose",
+    "deploy": "npx checkly deploy --force",
+    "fail:on": "DEMO_FAIL_MODE=true npx checkly deploy --force",
+    "fail:off": "DEMO_FAIL_MODE=false npx checkly deploy --force"
+  },
+  "dependencies": {
+    "@playwright/test": "^1.58.2",
+    "checkly": "^10.1.0",
+    "dotenv": "^16.4.7",
+    "jiti": "^2.4.2"
+  }
+}

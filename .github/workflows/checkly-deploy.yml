@@ -1,0 +1,32 @@
+name: Checkly Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: checkly-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy checks
+    runs-on: ubuntu-latest
+    env:
+      CHECKLY_API_KEY: ${{ secrets.CHECKLY_API_KEY }}
+      CHECKLY_ACCOUNT_ID: ${{ secrets.CHECKLY_ACCOUNT_ID }}
+      TARGET_URL: https://danube-web.shop
+      DEMO_FAIL_MODE: ${{ vars.DEMO_FAIL_MODE || 'false' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - name: Deploy to Checkly
+        run: npx checkly deploy --force

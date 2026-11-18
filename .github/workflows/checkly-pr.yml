@@ -1,0 +1,34 @@
+name: Checkly PR
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: checkly-pr-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checkly-test:
+    name: Checkly test (record)
+    runs-on: ubuntu-latest
+    env:
+      CHECKLY_API_KEY: ${{ secrets.CHECKLY_API_KEY }}
+      CHECKLY_ACCOUNT_ID: ${{ secrets.CHECKLY_ACCOUNT_ID }}
+      TARGET_URL: https://danube-web.shop
+      DEMO_FAIL_MODE: ${{ vars.DEMO_FAIL_MODE || 'false' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Run Checkly test (recorded session)
+        run: npx checkly test --record --verbose --reporter=github
