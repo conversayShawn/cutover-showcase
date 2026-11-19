@@ -20,7 +20,7 @@ export const jiraWebhook = new WebhookAlertChannel('showcase-jira-webhook', {
   method: 'POST',
   url:
     process.env.JIRA_WEBHOOK_URL ||
-    'https://webhook.site/da4b1f19-fdaa-4ac4-9403-7c5e39ea12a8',
+    'https://webhook.site/89e6b87e-b0ec-46ff-b8e8-168fdd372f35',
   headers: [{ key: 'Content-Type', value: 'application/json' }],
   template: JSON.stringify(
     {
